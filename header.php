@@ -24,12 +24,8 @@
 	<div class="header__block header__block--left header__brand">
 		<?php theme_custom_logo(); ?>
 	</div>
-	<div class="show-s header__block header__block--right">
-		<button class="header__menu header__menu--right" data-toggle-target="#main-menu" data-toggle-modifier="menu--hidden">
-			<i class="material-icons">menu</i>
-		</button>
-	</div>
-	<div class="hide-s header__block menu header__block--right">
+
+	<div class="header__block menu">
 			<?php 
 			wp_nav_menu( array(
 				'menu_class'     => 'menu__main',

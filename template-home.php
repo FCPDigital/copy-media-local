@@ -11,7 +11,9 @@ $base_post = get_post();
         <div id="anchor-1" class="home__landing section center-y">
             <img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="<?php echo get_the_title(); ?>">
         </div>
-    <?php } ?>
+    <?php } elseif( get_field("carousel") ) {
+        echo do_shortcode(get_field("carousel"));
+    } ?>
     
 
     <?php while ( have_posts() ) : the_post(); ?>
