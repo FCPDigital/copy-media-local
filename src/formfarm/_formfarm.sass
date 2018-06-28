@@ -1,0 +1,109 @@
+@import "variables"
+@import "checker"
+
+
+.form
+	display: flex
+	justify-content: space-between
+	flex-wrap: wrap
+
+.form__group
+	
+	width: 100%
+	background-color: $group-background
+	box-sizing: border-box
+	margin-bottom: $margin
+	transition: .4s
+
+
+	&--half 
+		display: inline-block
+		width: calc(50% - #{$gutter})
+
+	input, textarea, .select-custom__title
+		padding: $padding
+		color: $color-text
+		background-color: $input-background
+		border: $border-input
+		width: 100%
+		box-sizing: border-box
+		font-family: inherit
+		font-size: inherit
+		height: $inputHeight
+
+	textarea
+		height: auto
+
+	.select-custom__title
+		color: #555
+
+
+.form__alert
+	position: relative
+	color: #980000
+	display: block
+	box-sizing: content-box
+	font-weight: bold
+	letter-spacing: 2px
+	font-size: 10px
+	padding: 0px 10px
+	transition: .3s
+	opacity: 0
+	max-height: 0
+	text-align: left
+	&--display
+		opacity: 1
+		max-height: 100px
+
+.select-custom
+
+	position: relative
+
+	&__list
+		max-height: 0
+		opacity: 0
+		overflow: hidden
+		transition: .4s
+		position: absolute
+		width: 100%
+		top: 100%
+		background-color: white
+		border-bottom-left-radius: 5px
+		border-bottom-right-radius: 5px
+		z-index: 999
+	
+	&__item 
+		padding: $pad-small
+		border-bottom: 1px solid #DDD
+		transition: .4s 
+		cursor: pointer
+		&-title
+			margin-left: 0px
+			transition: .4s 
+
+		&:hover, &--selected
+			background-color: rgba(13, 161, 156, 0.1)
+			.select-custom__item-title
+				margin-left: 5px
+
+
+	&__ico-down 
+		width: 20px
+		height: 20px
+		background-image: url("./../vendor/formfarm/img/down-arrow.svg")
+		background-repeat: no-repeat
+		background-position: center
+		background-size: 50%
+		display: block
+		position: absolute
+		top: calc(50% - #{$pad-small})
+		right: #{$pad-small}
+		
+
+	&.list-open
+		.select-custom__list
+			opacity: 1
+	
+	&__title
+		margin-left: 0
+	

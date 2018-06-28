@@ -1,0 +1,62 @@
+.wpcf7
+    &-form-control
+    
+    &-textarea
+        border: 0 !important
+        border-bottom: 1px solid $color-dark !important
+
+.mdc
+    &-textfield
+        &::after
+            background-color: $color-dark !important
+
+
+.wpcf7-form-control
+    width: 80%
+    padding: 10px
+    border: 1px solid #e4e4e4 !important
+    border-radius: 5px
+
+.wpcf7-submit 
+    display: inline-block
+    background-color: black
+    color: white
+    width: 110px
+    border-radius: 0
+    border: 2px solid $color-primary !important
+    background-color: $color-primary
+    font-size: 1em
+    font-weight: bold
+    letter-spacing: 1px
+    transition: .4s ease-in
+    &:hover
+        background-color: transparent
+        color: black
+
+// Label
+#cf7md-form 
+    .mdc-textfield--invalid:not(.mdc-textfield--focused) .mdc-textfield__label
+        color: black !important
+        &::after
+            color: inherit !important
+    
+    .mdc-textfield--focused
+        .mdc-textfield__label
+            color: black
+            &::after
+                color: black !important
+
+    .cf7md-submit
+        text-align: center
+        .wpcf7-submit.mdc-button--primary
+            background-color: white
+            color: black
+            letter-spacing: 1px
+            border: 2px solid black
+            border-radius: 0
+            box-shadow: none
+            box-sizing: content-box
+            transition: .4s
+            &:hover
+                background-color: black
+                color: white

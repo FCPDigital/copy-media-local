@@ -1,0 +1,75 @@
+.title
+
+    &__container
+        position: relative
+        padding: 15px
+        text-align: center
+        &::after 
+            content: ""
+            width: calc(100% - 30px)
+            height: 1px 
+            background-color: black
+            display: block
+            bottom: 47px
+            position: absolute
+
+    &--crossed 
+        color: black
+        font-weight: bold
+        font-size: 25px
+        text-transform: uppercase
+        margin: 0px 0 30px 0
+        background-color: white
+        display: inline-block
+        position: relative
+        z-index: 2
+        padding: 0 15px
+
+        &::before
+            content: ""
+            width: auto
+            display: block
+            height: 100%
+            background-color: white
+
+        &::after
+            content: ""
+            position: absolute
+            width: 100%
+        
+    &-1
+        padding-bottom: 10px
+        position: relative
+        z-index: 998
+        text-align: center
+        text-transform: uppercase
+        font-size: $font-big
+        font-weight: bold
+
+
+    &-3, &-2
+        font-family: $font-2
+        text-align: center
+        &--left
+            text-align: left
+        &--right
+            text-align: right
+
+    &-2
+        font-size: 3em
+        margin-bottom: $big-pad
+    
+    &-3
+        font-size: $font-medium
+        margin-bottom: 40px
+        color: $color-dark
+        text-transform: uppercase
+        line-height: 40px
+
+    &-4
+        font-size: $font-medium
+        font-weight: 600
+        color: $color-primary
+        text-transform: uppercase
+        margin-bottom: 40px
+        line-height: 40px
