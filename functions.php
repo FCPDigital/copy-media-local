@@ -39,6 +39,88 @@ if(!function_exists("theme_custom_logo")){
 
 if(function_exists("register_field_group"))
 {
+    register_field_group(array (
+    'id' => 'acf_produits',
+    'title' => 'Produits',
+    'fields' => array (
+      array (
+        'key' => 'field_5b35fb9202b5a',
+        'label' => 'Titre bloc secondaire',
+        'name' => 'title_block_2',
+        'type' => 'text',
+        'instructions' => 'Entrez le titre du block secondaire. ',
+        'default_value' => 'Nos Finitions',
+        'placeholder' => '',
+        'prepend' => '',
+        'append' => '',
+        'formatting' => 'html',
+        'maxlength' => '',
+      ),
+      array (
+        'key' => 'field_5b35fa3502b58',
+        'label' => 'Produits Liés',
+        'name' => 'produits_relation',
+        'type' => 'relationship',
+        'instructions' => 'Sélectionnez les produits liés pour qu\'ils s\'affiche en bas. ',
+        'return_format' => 'object',
+        'post_type' => array (
+          0 => 'product',
+        ),
+        'taxonomy' => array (
+          0 => 'all',
+        ),
+        'filters' => array (
+          0 => 'search',
+        ),
+        'result_elements' => array (
+          0 => 'post_type',
+          1 => 'post_title',
+        ),
+        'max' => '',
+      ),
+      array (
+        'key' => 'field_5b35fb6302b59',
+        'label' => 'Finitions',
+        'name' => 'finitions_relation',
+        'type' => 'relationship',
+        'instructions' => 'Sélectionnez les finitions disponible pour ce produit',
+        'return_format' => 'object',
+        'post_type' => array (
+          0 => 'finition',
+        ),
+        'taxonomy' => array (
+          0 => 'all',
+        ),
+        'filters' => array (
+          0 => 'search',
+        ),
+        'result_elements' => array (
+          0 => 'post_type',
+          1 => 'post_title',
+        ),
+        'max' => '',
+      ),
+    ),
+    'location' => array (
+      array (
+        array (
+          'param' => 'post_type',
+          'operator' => '==',
+          'value' => 'product',
+          'order_no' => 0,
+          'group_no' => 0,
+        ),
+      ),
+    ),
+    'options' => array (
+      'position' => 'normal',
+      'layout' => 'no_box',
+      'hide_on_screen' => array (
+      ),
+    ),
+    'menu_order' => 0,
+  ));
+
 	register_field_group(array (
 		'id' => 'acf_homepage',
 		'title' => 'homepage',
@@ -90,6 +172,7 @@ if(function_exists("register_field_group"))
 
 
 add_action( 'widgets_init', 'footer_widgets_init' );
+
 function footer_widgets_init() {
     register_sidebar( array(
         'name' => __( 'Footer 1', 'footer-1' ),
@@ -122,13 +205,10 @@ function theme_setup() {
 	register_nav_menus( array(
 		'primary' => __( 'Primary Menu',      'twentyfifteen' ),
 		'social'  => __( 'Social Links Menu', 'twentyfifteen' ),
-	) );
+	));
 	add_theme_support( 'post-formats', array(
 		'aside', 'image', 'video', 'quote', 'link', 'gallery', 'status', 'audio', 'chat'
-	) );
-
-
-
+	));
 }
 
 add_action( 'after_setup_theme', 'theme_setup' );
@@ -266,9 +346,9 @@ function categories_samples( $atts ){
 	$content = "<div class='categories-container'><div class='categories'>";
 	for($i=0; $i<count($termsSaved); $i++){
 		$img = z_taxonomy_image_url($termsSaved[$i]->term_id);
-		$content .= '<div id="category-miniature-'.$termsSaved[$i]->term_id.'" class="categories__item" style="background-image: url('.$img.');">
-			<div class="categories__item-content">
-				<p class="categories__item-title">'.$termsSaved[$i]->name.'</p>
+		$content .= '<div id="category-miniature-'.$termsSaved[$i]->term_id.'" class="miniature" style="background-image: url('.$img.');">
+			<div class="miniature-content">
+				<p class="miniature-title">'.$termsSaved[$i]->name.'</p>
 				<div class="center"><a class="btn btn--light" href="'.get_term_link($termsSaved[$i], "category").'">En savoir plus</a></div>
 			</div>
 		</div>';
@@ -307,10 +387,82 @@ function shortcode_contact( $atts, $content ){
 
 add_shortcode( 'contact', 'shortcode_contact' );
 
+
+function shortcode_devis( $atts, $content ){
+  $a = shortcode_atts( array(
+        'expanded' => false
+  ), $atts );
+
+  return '
+    <div id="devis" class="container">
+      <div class="devis">
+        <form action="send-devis.php" method="post" class="form">
+          <input type="hidden" value="LIVRE" name="commerciale">
+          <input type="hidden" value="AUTO-EDITION" name="devis_type">
+          <input type="hidden" name="current_url" value="'.$_SERVER["REQUEST_URI"].'">
+          <div class="form__group form__group--half">
+            <label class="form__label" for="">Votre nom et prénom</label>
+            <input type="text" class="form__input" name="nom" placeholder="Ex : Dupont Jean" required="required"
+            data-alert="Veuillez saisir vos nom et prénom.">
+          </div>
+          <div class="form__group form__group--half">
+            <label class="form__label" for="">Votre E-mail</label>
+            <input type="email" class="form__input" name="email" placeholder="Votre email" required="required"
+            data-alert="Veuillez saisir une adresse email valide.">
+          </div>
+          <div class="form__group form__group--half">
+            <label class="form__label" for="">Votre téléphone</label>
+            <input type="tel" class="form__input" name="tel" placeholder="Votre téléphone" required="required"
+            data-alert="Veuillez saisir un numéro de téléphone">
+          </div>
+          <div class="form__group form__group--half">
+            <label class="form__label" for="">Vos disponibilités</label>
+            <select name="dispo" data-alert="Veuillez choisir une disponibilité">
+              <option disabled value="" selected="">Disponibilités</option>
+              <option value="Le matin">Le matin</option>
+              <option value="après midi">L\'après-midi</option>
+              <option value="fin de journée">En fin de journée</option>
+            </select>
+          </div>
+          <div class="form__group">
+            <label class="form__label" for="">Détails de votre projet</label>
+            <textarea name="com" class="form__textarea" id="" cols="30" rows="4" placeholder="Détails de votre projet"></textarea>
+          </div>
+          <div class="form__group form__group--half pr-1">
+            <label class="form__label form__label--full form__label--right" for="">Quantité : </label>
+          </div>
+          <div class="form__group form__group--half">
+            <input type="number" class="form__input" name="qty" placeholder="Min: 100" required="required"/>
+          </div>
+          <div class="form__submit text-center full-w">
+            <input type="submit" value="Envoyez la demande de devis" class="btn btn--primary full-w">
+          </div>
+          <div id="widget-container"></div>
+        </form>
+      </div>
+    </div>';
+}
+
+add_shortcode( 'devis', 'shortcode_devis' );
+
+
+
+
+
 /******************* POST TYPES ********************/
 
+function namespace_add_custom_types( $query ) {
+  if( (is_category() || is_tag()) && $query->is_archive() && empty( $query->query_vars['suppress_filters'] ) ) {
+    $query->set( 'post_type', array(
+      'post', 'product'
+    ));
+    }
+    return $query;
+}
+add_filter( 'pre_get_posts', 'namespace_add_custom_types' );
 
-function wporg_custom_post_type()
+
+function register_custom_post_type()
 {
 	register_post_type('product',
 		array(
@@ -318,8 +470,6 @@ function wporg_custom_post_type()
 				'name'          => __('Products'),
 				'singular_name' => __('Product'),
 			),
-			'public'      => true,
-			'has_archive' => true,
 			'taxonomies'  => array( 'category', 'category-product' ),
 			'public' => true,
       'show_ui' => true,
@@ -331,10 +481,33 @@ function wporg_custom_post_type()
       'has_archive' => true,
       'query_var' => true,
       'can_export' => true,
-      'rewrite' => true,
+      'rewrite' => false,
+      'supports' => array( 'title', 'editor', 'thumbnail' )
 		)
 	);
+
+  register_post_type('finition',
+    array(
+      'labels'      => array(
+        'name'          => __('Finitions'),
+        'singular_name' => __('Finition'),
+      ),
+      'taxonomies'  => array( 'category', 'category-product' ),
+      'public' => true,
+      'show_ui' => true,
+      'show_in_menu' => true,
+      'menu_position' => 6,
+      'show_in_nav_menus' => true,
+      'publicly_queryable' => false,
+      'exclude_from_search' => true,
+      'has_archive' => false,
+      'query_var' => true,
+      'can_export' => true,
+      'rewrite' => false,
+      'supports' => array( 'title', 'editor', 'thumbnail' )
+    )
+  );
 }
-add_action('init', 'wporg_custom_post_type');
+add_action('init', 'register_custom_post_type');
 
 

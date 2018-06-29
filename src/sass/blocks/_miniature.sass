@@ -1,21 +1,43 @@
+.miniatures 
+  display: flex
+  justify-content: space-around
+  flex-wrap: wrap
+
 .miniature
-
-  padding: 30px
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, .2)
-  margin: 30px
-  width: 200px
+  width: 350px
+  height: 350px
+  background-color: #EEE
+  overflow: hidden
+  position: relative
+  margin-bottom: 30px
   
-  &__title
+  background:
+    size: cover
+    position: center
+ 
+  &--small
+    width: 290px
+    height: 290px
+
+  &-content
+    position: absolute
+    height: 40%
+    width: 100%
     text-align: center
-    font-size: 2em
-    font-weight: bold
-    margin-bottom: 20px
+    background-color: $color-primary-light
+    display: flex
+    flex-direction: column
+    justify-content: center
+    transition: .4s
+    bottom: -25%
 
-  &__header
+  &-title
+    margin-bottom: 40px
+    color: white
+    font-size: $font-medium
 
-  &__body
-
-
-
-  &__thumbnail
-
+  &:hover
+    .miniature
+      &-content
+        height: 100%
+        bottom: 0

@@ -29,7 +29,7 @@ get_header(); ?>
 		?>
 	</div>
 
-	<div  class="archive__body wrapper">
+	<div  class="archive__body miniatures wrapper">
 		
 	<?php if ( have_posts() ) : 
 

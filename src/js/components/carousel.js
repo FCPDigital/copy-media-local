@@ -1,75 +1,123 @@
-function Carousel(element) {
-  this.element = element;
-  this.headItems = this.element.querySelectorAll(".carousel__header-item");
-  this.items = this.element.querySelectorAll(".carousel__body-item"); 
-  this._current = 0;
-  this.initEvents();
+Object.defineProperty(Element.prototype, 'outerWidth', {
+    'get': function(){
+        var height = this.clientWidth;
+        var computedStyle = window.getComputedStyle(this); 
+        height += parseInt(computedStyle.marginLeft, 10);
+        height += parseInt(computedStyle.marginRight, 10);
+        height += parseInt(computedStyle.borderLeftWidth, 10);
+        height += parseInt(computedStyle.borderRightWidth, 10);
+        return height;
+    }
+});
+
+Object.defineProperty(Element.prototype, 'outerHeight', {
+    'get': function(){
+        var height = this.clientHeight;
+        var computedStyle = window.getComputedStyle(this); 
+        height += parseInt(computedStyle.marginTop, 10);
+        height += parseInt(computedStyle.marginBottom, 10);
+        height += parseInt(computedStyle.borderTopWidth, 10);
+        height += parseInt(computedStyle.borderBottomWidth, 10);
+        return height;
+    }
+});
+
+
+class Carousel {
+  constructor(element){
+    this.container = element.querySelector(".carousel__container");
+    this.size = 3;
+    this.interval = 2000;
+    this.items = [];
+    var items = element.querySelectorAll(".carousel__item");
+    items.forEach((item, index) => {
+      this.items[index] = new CarouselItem(item, index, this);
+    })
+
+    this.refresh();
+
+    window.addEventListener("resize", ()=>{
+      this.refresh();
+    })
+  }
+
+  refreshTimeout(){
+    if( this.timeout ) clearTimeout(this.timeout); 
+    setTimeout(()=>{
+      this.next();
+    }, this.interval)
+  }
+
+  next(){
+    this.items.forEach(item => {
+      item.next();
+    })
+    this.refreshTimeout();
+  }
+
+  previous(){
+    this.items.forEach(item => {
+      item.previous();
+    })
+    this.refreshTimeout();
+  }
+
+  refresh(){
+    this.items.forEach(item => {
+      item.updateSizes();
+      item.updatePosition();
+    });
+    this.widthSize = this.items[0].element.outerWidth;
+    this.size = Math.floor(window.innerWidth/this.widthSize);
+    this.container.style.height = this.items[0].element.outerHeight+"px";
+    this.refreshTimeout();
+  }
 }
 
-Carousel.prototype = {
-  get current() {
-    if( this._current >= 0 ) {
-      return this._current;
+class CarouselItem {
+  constructor(element, index, carousel) {
+    this.element = element;
+    this.carousel = carousel;
+    this._position = index;
+  }
+
+  updatePosition(){
+    this.position = this._position;
+  }
+
+  updateSizes(){
+    this.sizes = {
+      width: this.element.outerWidth,
+      height: this.element.outerHeight
     }
-    for(var i=0; i<this.headItems.length; i++) {
-      if( this.headItems[i].classList.contains("carousel__header-item--active") ) {
-        return i;
-      }
+  }
+
+  next(){
+    if( this.position == this.carousel.items.length - 1 ){
+      this.position = 0;
+    } else {
+      this.position += 1;  
     }
-    this.current = 0; 
-    return 0; 
-  },
+  }
 
-  set current(value) {
-    if( value !== this.current ) {
-      this.hide(this.current);
-      setTimeout((function(){
-        this.show(value);
-      }).bind(this), 350)
+  previous(){
+    if( this.position == - 1 ){
+      this.position = this.carousel.items.length - 1;
+    } else {
+      this.position -= 1;   
     }
-    var last = this._current; 
-    this._current = value;
-    this.onChange.call(this, this.items[this.current], this.items[last], this.current);
-  },
+  }
 
-  getHead: function(rank){
-    return this.headItems[rank];
-  },
+  set position(position) {
+    console.log("Hello", this.carousel.items.length);
+    if( position > this.carousel.items.length - 1 || position < 0 ) return;
+    this.element.style.left = this._position*this.sizes.width + "px"; 
+    console.log(this.element.style.left);
+    this._position = position;
+  } 
 
-  getBody: function(rank){
-    return this.items[rank];
-  },
-
-  hide: function(rank) {
-    this.headItems[rank].classList.remove("carousel__header-item--active");
-    this.items[rank].classList.replace("carousel__body-item--visible", "carousel__body-item--hidding");
-    setTimeout((function(){
-      this.items[rank].classList.replace("carousel__body-item--hidding", "carousel__body-item--hidden");
-    }).bind(this), 350)
-  },
-
-  show: function(rank) {
-    this.headItems[rank].classList.add("carousel__header-item--active");
-    this.items[rank].classList.replace("carousel__body-item--hidden", "carousel__body-item--hidding");
-    this.items[rank].classList.replace("carousel__body-item--hidding", "carousel__body-item--visible");
-  },
-
-  initHeadEvent: function(element, rank) {
-    var self = this;
-    element.addEventListener("click", function(e){
-      self.current = rank;
-      e.preventDefault();
-    })
-  },
-
-  initEvents: function() {
-    for(var i=0; i<this.headItems.length; i++) {
-      this.initHeadEvent(this.headItems[i], i);
-    }
-  },
-
-  onChange: function(callback) {
-    this.onChange = callback;
+  get position() {
+    return this._position;
   }
 }
 

@@ -2,6 +2,7 @@ import Carousel from "./components/carousel.js";
 import Thumbnails from "./components/thumbnails.js";
 import TogglerManager from "./components/toggler.js";
 import {Toggler} from "./components/toggler.js";
+import FormFarm from "./../formfarm/components/formfarm.js";
 
 
 var offsetTop = function(element) {
@@ -51,4 +52,9 @@ function manageHomeCarousel(){
 window.addEventListener("load", function(){
   manageHomeCarousel();
   TogglerManager.init();
+  FormFarm.init();
+
+  var carouselElement = document.querySelector("#product-carousel");
+  console.log("Helll");
+  new Carousel(carouselElement);
 });

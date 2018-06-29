@@ -404,6 +404,5 @@ var FormFarm = {
 	}
 }
 
-window.onload = function(){
-	FormFarm.init();
-}
+
+export default FormFarm;

@@ -61,10 +61,15 @@ $properties: ( margin: m, padding: p )
     $value: $space*$i
     .#{$short_p}-#{$i}
       #{$property}: $value
+    .#{$short_p}-#{$i}-i
+      #{$property}: $value !important
 
     @each $direction, $short_d in $directions
       .#{$short_p}#{$short_d}-#{$i}
         #{$property}-#{$direction}: $space*$i
+
+      .#{$short_p}#{$short_d}-#{$i}-i
+        #{$property}-#{$direction}: $space*$i !important
 
 // Hide / Show
 

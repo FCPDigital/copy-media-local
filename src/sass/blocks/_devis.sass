@@ -1,0 +1,39 @@
+.devis
+  .form
+
+    &__input, &__group .select-custom__title
+      height: 40px
+
+    &__input, &__textarea, &__group .select-custom__title
+      background-color: white
+      border: 1px solid $color-primary
+      color: $color-dark
+      font-weight: 300
+      font-style: italic
+      font-size: 14px
+      padding: 12px 10px
+    
+    &__group
+      margin-bottom: 20px
+    
+    &__label
+      color: $color-primary
+      margin-bottom: 10px
+      display: inline-block
+      &--full
+        width: 100%
+        height: 100%
+        display: flex
+        flex-direction: column
+        justify-content: center
+      &--right
+        text-align: right
+
+  .select-custom__item
+    background-color: #4ebcc2
+    color: white
+    font-size: 14px
+    border-color: white
+
+    &:hover
+      background-color: transparentize(#4ebcc2, 0.1)
