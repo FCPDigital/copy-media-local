@@ -426,17 +426,22 @@ var Carousel = function () {
 
     _classCallCheck(this, Carousel);
 
+    this.element = element;
     this.container = element.querySelector(".carousel__container");
     this.size = 3;
-    this.interval = 2000;
+    this.interval = 3000;
     this.items = [];
+    this.leftButton = this.element.querySelector(".carousel__selector--left");
+    this.rightButton = this.element.querySelector(".carousel__selector--right");
+    this.selectorContainer = this.element.querySelector(".carousel__selectors");
+
     var items = element.querySelectorAll(".carousel__item");
     items.forEach(function (item, index) {
       _this.items[index] = new CarouselItem(item, index, _this);
     });
 
     this.refresh();
-
+    this.initEvents();
     window.addEventListener("resize", function () {
       _this.refresh();
     });
@@ -448,7 +453,7 @@ var Carousel = function () {
       var _this2 = this;
 
       if (this.timeout) clearTimeout(this.timeout);
-      setTimeout(function () {
+      this.timeout = setTimeout(function () {
         _this2.next();
       }, this.interval);
     }
@@ -471,14 +476,43 @@ var Carousel = function () {
   }, {
     key: 'refresh',
     value: function refresh() {
-      this.items.forEach(function (item) {
-        item.updateSizes();
-        item.updatePosition();
-      });
       this.widthSize = this.items[0].element.outerWidth;
       this.size = Math.floor(window.innerWidth / this.widthSize);
-      this.container.style.height = this.items[0].element.outerHeight + "px";
+      this.widthComputed = window.innerWidth / this.size;
+
+      this.items.forEach(function (item) {
+        item.updateSizes();
+        item.restorePosition();
+        item.updatePosition();
+      });
       this.refreshTimeout();
+
+      if (this.isActive) {
+        this.container.style.height = this.items[0].element.outerHeight + 70 + "px";
+        this.element.classList.remove("carousel--disabled");
+      } else {
+        this.container.style.height = this.items[0].element.outerHeight + "px";
+        this.element.classList.add("carousel--disabled");
+      }
+
+      console.log(this.isActive);
+    }
+  }, {
+    key: 'initEvents',
+    value: function initEvents() {
+      var _this3 = this;
+
+      this.leftButton.addEventListener("click", function () {
+        _this3.previous();
+      });
+      this.rightButton.addEventListener("click", function () {
+        _this3.next();
+      });
+    }
+  }, {
+    key: 'isActive',
+    get: function get() {
+      return this.size < this.items.length ? true : false;
     }
   }]);
 
@@ -492,9 +526,15 @@ var CarouselItem = function () {
     this.element = element;
     this.carousel = carousel;
     this._position = index;
+    this.startPosition = index;
   }
 
   _createClass(CarouselItem, [{
+    key: 'restorePosition',
+    value: function restorePosition() {
+      this._position = this.startPosition;
+    }
+  }, {
     key: 'updatePosition',
     value: function updatePosition() {
       this.position = this._position;
@@ -510,7 +550,9 @@ var CarouselItem = function () {
   }, {
     key: 'next',
     value: function next() {
+      if (!this.carousel.isActive) return;
       if (this.position == this.carousel.items.length - 1) {
+        this.needJump = "left";
         this.position = 0;
       } else {
         this.position += 1;
@@ -519,8 +561,10 @@ var CarouselItem = function () {
   }, {
     key: 'previous',
     value: function previous() {
+      if (!this.carousel.isActive) return;
       if (this.position == -1) {
-        this.position = this.carousel.items.length - 1;
+        this.needJump = "right";
+        this.position = this.carousel.items.length - 2;
       } else {
         this.position -= 1;
       }
@@ -528,11 +572,33 @@ var CarouselItem = function () {
   }, {
     key: 'position',
     set: function set(position) {
-      console.log("Hello", this.carousel.items.length);
-      if (position > this.carousel.items.length - 1 || position < 0) return;
-      this.element.style.left = this._position * this.sizes.width + "px";
-      console.log(this.element.style.left);
-      this._position = position;
+      var _this4 = this;
+
+      if (position > this.carousel.items.length - 1 || position < -1) return;
+      var timeout = 0;
+      if (this.needJump) {
+        this.element.style.transitionDuration = "0s";
+        if (this.needJump == "left") {
+          this.element.style.left = -this.carousel.widthComputed + "px";
+        } else {
+          this.element.style.left = this.carousel.widthComputed * this.carousel.size + "px";
+        }
+
+        timeout = 30;
+      }
+
+      setTimeout(function () {
+
+        if (_this4.needJump) {
+          _this4.element.style.transitionDuration = ".6s";
+        }
+
+        _this4._position = position;
+        var left = _this4._position * _this4.carousel.widthComputed + (_this4.carousel.widthComputed - _this4.carousel.widthSize) / 2;
+        _this4.element.style.left = left + "px";
+        _this4.element.setAttribute("data-position", position);
+        _this4.needJump = false;
+      }, timeout);
     },
     get: function get() {
       return this._position;

@@ -32,7 +32,7 @@ get_header(); ?>
     <div class="clear"></div>
   </div>
   
-  <div class="mt-2 mb-2">
+  <div class="mt-3 mb-3">
     <article class="text wrapper">
       <?php the_content(); ?>
     </article>
@@ -66,12 +66,21 @@ get_header(); ?>
           </div>
         <?php } ?>
       </div>
+      <div class="carousel__selectors">
+        <button class="carousel__selector carousel__selector--left">
+          <i class="material-icons">arrow_back_ios</i>
+        </button>
+        <button class="carousel__selector carousel__selector--right">
+          <i class="material-icons">arrow_forward_ios</i>
+        </button>
+      </div>
     </div>
   </div>
 
-
+  
   <?php 
-  // End the loop.
+  get_template_part( 'content/content', 'needhelp' );
+  get_template_part( 'content/content', 'contact' );
   endwhile;
   ?>
 

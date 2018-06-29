@@ -22,7 +22,7 @@ get_header(); ?>
 		
 	</div>
 
-	<div class="archive__header section center-y min-h-big">
+	<div class="archive__header">
 		<?php 
 		the_archive_title( '<h1 class="title-1 archive__title">', '</h1>' ); 
 		the_archive_description( '<div class="taxonomy-description archive__description">', '</div>' );
